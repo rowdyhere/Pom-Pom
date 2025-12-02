@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROWDY - Premium Content Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #ff6b7d;
+            --accent-color: #ff9ff3;
+            --dark-bg: rgba(10, 10, 20, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(30, 10, 40, 0.95)), 
+                        url('https://images.unsplash.com/photo-1574717024453-354056aafa98?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        header {
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, var(--dark-bg) 0%, rgba(20, 20, 40, 0.8) 50%, var(--dark-bg) 100%);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo i {
+            margin-right: 12px;
+            font-size: 32px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .premium-badge {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.7s ease;
+        }
+        
+        .premium-badge:hover::before {
+            left: 100%;
+        }
+        
+        .premium-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+        
+        .premium-badge i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(255, 255, 255, 0.02));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .user-avatar:hover::before {
+            opacity: 0.2;
+        }
+        
+        .user-avatar:hover {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: rgba(255, 71, 87, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+        }
+        
+        .user-avatar i {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .user-avatar:hover i {
+            color: var(--primary-color);
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--glass-bg), rgba(255, 255, 255, 0.02));
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        .back-button:hover::before {
+            left: 100%;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-color);
+            background: rgba(255, 71, 87, 0.1);
+            border-color: rgba(255, 71, 87, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.2);
+        }
+        
+        .back-button i {
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover i {
+            transform: translateX(-3px);
+        }
+        
+        .hero {
+            padding: 40px 0;
+            text-align: center;
+            animation: fadeIn 1.2s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .separator {
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), var(--accent-color), transparent);
+            margin: 20px auto 40px;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .video-card {
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.8), rgba(30, 20, 40, 0.8));
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .video-card:nth-child(1) { animation-delay: 0.1s; }
+        .video-card:nth-child(2) { animation-delay: 0.2s; }
+        .video-card:nth-child(3) { animation-delay: 0.3s; }
+        .video-card:nth-child(4) { animation-delay: 0.4s; }
+        .video-card:nth-child(5) { animation-delay: 0.5s; }
+        .video-card:nth-child(6) { animation-delay: 0.6s; }
+        .video-card:nth-child(7) { animation-delay: 0.7s; }
+        .video-card:nth-child(8) { animation-delay: 0.8s; }
+        .video-card:nth-child(9) { animation-delay: 0.9s; }
+        .video-card:nth-child(10) { animation-delay: 1.0s; }
+        
+        .video-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 71, 87, 0.3);
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+            filter: brightness(0.9);
+        }
+        
+        .video-card:hover .video-thumbnail {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+        
+        .video-info {
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .video-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .video-meta i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-button {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .play-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0);
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
+        
+        .play-button:hover::before {
+            transform: scale(1);
+        }
+        
+        .play-button:hover {
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(255, 71, 87, 0.5);
+        }
+        
+        .play-button i {
+            font-size: 28px;
+            margin-left: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .premium-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 71, 87, 0.1) 0%, transparent 70%);
+            animation: rotate 20s infinite linear;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .premium-modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.2), rgba(255, 107, 125, 0.2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.2);
+            position: relative;
+            animation: floatIcon 4s ease-in-out infinite;
+        }
+        
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .modal-icon i {
+            font-size: 36px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .modal-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .subscription-plans {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .plan {
+            background: linear-gradient(135deg, var(--glass-bg), rgba(255, 255, 255, 0.02));
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        .plan:hover::before {
+            left: 100%;
+        }
+        
+        .plan:hover {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 107, 125, 0.1));
+            border-color: rgba(255, 71, 87, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.2);
+        }
+        
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .plan-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        
+        .plan-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+        
+        .plan-features {
+            text-align: left;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .plan-feature i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .modal-button {
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .primary-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+        
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+        }
+        
+        .secondary-button {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .secondary-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            background: var(--glass-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 71, 87, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .premium-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            display: flex;
+            align-items: center;
+        }
+        
+        .premium-indicator i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification i {
+            margin-right: 15px;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .subscription-info {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.8), rgba(30, 20, 40, 0.8));
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.8rem;
+            max-width: 200px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .subscription-info-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .subscription-info-title i {
+            margin-right: 5px;
+        }
+        
+        .subscription-info-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+        
+        /* Background elements */
+        .background-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+            animation: floatCircle 20s infinite ease-in-out;
+        }
+        
+        @keyframes floatCircle {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(20px, -30px) scale(1.1);
+            }
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+            75% {
+                transform: translate(30px, 10px) scale(1.05);
+            }
+        }
+        
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            top: -150px;
+            right: -150px;
+            background: radial-gradient(circle, var(--primary-color), transparent);
+        }
+        
+        .circle-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -200px;
+            left: -200px;
+            background: radial-gradient(circle, var(--secondary-color), transparent);
+            animation-delay: 2s;
+        }
+        
+        .circle-3 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 10%;
+            background: radial-gradient(circle, var(--accent-color), transparent);
+            animation-delay: 4s;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 0;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .logo i {
+                font-size: 28px;
+            }
+            
+            .user-menu {
+                gap: 15px;
+            }
+            
+            .premium-badge {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .back-button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            
+            .subscription-info {
+                position: static;
+                margin-top: 10px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="background-elements">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+            <a href="#" class="logo">
+                <i class="fas fa-play-circle"></i>
+                ROWDY
+            </a>
+            <div class="user-menu">
+                <div class="premium-badge">
+                    <i class="fas fa-crown"></i>
+                    PREMIUM
+                </div>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+        
+        <section class="hero">
+            <h1>Premium Content Library</h1>
+            <div class="separator"></div>
+            <p class="subtitle">ROWDY unlimited exclusive content. Anytime. Anywhere.</p>
+            
+            <!-- Subscription info for premium users -->
+            <div class="subscription-info" id="subscriptionInfo" style="display: none;">
+                <div class="subscription-info-title">
+                    <i class="fas fa-crown"></i>
+                    Your Subscription
+                </div>
+                <div class="subscription-info-detail">
+                    <span>Plan:</span>
+                    <span id="userPlanName">-</span>
+                </div>
+                <div class="subscription-info-detail">
+                    <span>Expires:</span>
+                    <span id="userPlanExpiry">-</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="video-grid">
+            <div class="video-card" data-video="1">
+                <img src="https://files.catbox.moe/68e2w1.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Sexy Fucking Blojob</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 1.2M views</span>
+                        <span><i class="fas fa-clock"></i> 24:15</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="2">
+                <img src="https://files.catbox.moe/18flbf.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Sexy Fucking Titsjob</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 980K views</span>
+                        <span><i class="fas fa-clock"></i> 18:42</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="3">
+                <img src="https://files.catbox.moe/gsquat.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Sexy Fucking ASS</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 2.4M views</span>
+                        <span><i class="fas fa-clock"></i> 32:18</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="4">
+                <img src="https://files.catbox.moe/dkaax5.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Sexy Fucking pussy </h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 1.8M views</span>
+                        <span><i class="fas fa-clock"></i> 28:05</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="5">
+                <img src="https://files.catbox.moe/iz0uvl.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Missinory </h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 3.1M views</span>
+                        <span><i class="fas fa-clock"></i> 35:22</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="6">
+                <img src="https://files.catbox.moe/f9k47c.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Cow Girl </h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 1.5M views</span>
+                        <span><i class="fas fa-clock"></i> 21:47</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="7">
+                <img src="https://files.catbox.moe/7l9qsx.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Hand Job </h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 2.7M views</span>
+                        <span><i class="fas fa-clock"></i> 29:33</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="8">
+                <img src="https://files.catbox.moe/rvle2j.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Hard Core</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 1.9M views</span>
+                        <span><i class="fas fa-clock"></i> 26:18</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="9">
+                <img src="https://files.catbox.moe/70ewre.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Huge Cock</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 2.2M views</span>
+                        <span><i class="fas fa-clock"></i> 31:05</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="10">
+                <img src="https://files.catbox.moe/7ch8ey.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Malf Hard Fucking</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 3.5M views</span>
+                        <span><i class="fas fa-clock"></i> 38:42</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-card" data-video="11">
+                <img src="https://ic-vt-nss.xhpingcdn.com/a/YjI5MzA3NTIzNzNhZDYxMmExZjE3MWQxNjAzMzBiNjA/s(w:640,h:360),webp/027/240/399/v2/2560x1440.217.webp" alt="Video thumbnail" class="video-thumbnail">
+                <div class="play-overlay">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Naughty Roommate can‘t pay her rent</h3>
+                    <div class="video-meta">
+                        <span><i class="fas fa-eye"></i> 3.5M views</span>
+                        <span><i class="fas fa-clock"></i> 12:42</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <div class="premium-modal" id="premiumModal">
+        <div class="modal-content">
+            <div class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2 class="modal-title">Unlock Premium Content</h2>
+            <p class="modal-description">
+                You need a premium subscription to watch this content. Choose your plan below and get instant access!
+            </p>
+            
+            <div class="subscription-plans">
+                <div class="plan" id="freeTrial">
+                    <div class="plan-header">
+                        <div class="plan-name">3-Month Free Trial</div>
+                        <div class="plan-price">$0</div>
+                    </div>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            Full access to all content
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            HD streaming quality
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            Cancel anytime
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plan" id="annualPlan">
+                    <div class="plan-header">
+                        <div class="plan-name">1-Year Premium</div>
+                        <div class="plan-price">$10</div>
+                    </div>
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            Everything in Free Trial
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            4K Ultra HD streaming
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            Exclusive content releases
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check-circle"></i>
+                            Download for offline viewing
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-button secondary-button" id="notNowButton">Not Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-crown"></i>
+        <div class="notification-content">
+            <div class="notification-title">Premium Activated!</div>
+            <div class="notification-message">Enjoy unlimited access to all content</div>
+        </div>
+    </div>
+    
+    <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random position
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * window.innerHeight;
+            
+            // Random size
+            const size = Math.random() * 4 + 2;
+            
+            // Random animation duration
+            const duration = Math.random() * 15 + 10;
+            
+            // Random delay
+            const delay = Math.random() * 5;
+            
+            particle.style.left = `${posX}px`;
+            particle.style.top = `${posY}px`;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Check if user has premium access
+        const hasPremium = localStorage.getItem('streamvibe_premium') === 'true';
+        
+        // Get DOM elements
+        const videoCards = document.querySelectorAll('.video-card');
+        const premiumModal = document.getElementById('premiumModal');
+        const closeModal = document.getElementById('closeModal');
+        const notNowButton = document.getElementById('notNowButton');
+        const freeTrial = document.getElementById('freeTrial');
+        const annualPlan = document.getElementById('annualPlan');
+        const notification = document.getElementById('notification');
+        const subscriptionInfo = document.getElementById('subscriptionInfo');
+        const userPlanName = document.getElementById('userPlanName');
+        const userPlanExpiry = document.getElementById('userPlanExpiry');
+        
+        // If user has premium, show notification and subscription info
+        if (hasPremium) {
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+                
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000);
+            }, 1000);
+            
+            // Show subscription info
+            subscriptionInfo.style.display = 'block';
+            userPlanName.textContent = localStorage.getItem('streamvibe_plan_name') || 'Premium';
+            userPlanExpiry.textContent = localStorage.getItem('streamvibe_subscription_end') || '-';
+            
+            // Add premium indicator to video cards
+            videoCards.forEach(card => {
+                const indicator = document.createElement('div');
+                indicator.className = 'premium-indicator';
+                indicator.innerHTML = '<i class="fas fa-crown"></i> PREMIUM';
+                card.appendChild(indicator);
+            });
+        }
+        
+        // Handle video card clicks
+        videoCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const videoId = this.getAttribute('data-video');
+                
+                if (hasPremium) {
+                    // If user has premium, redirect directly to video player
+                    window.location.href = `video.html?id=${videoId}`;
+                } else {
+                    // If user doesn't have premium, show premium modal
+                    premiumModal.setAttribute('data-video-id', videoId);
+                    premiumModal.classList.add('active');
+                }
+            });
+        });
+        
+        // Close modal
+        function closeModalFunction() {
+            premiumModal.classList.remove('active');
+        }
+        
+        closeModal.addEventListener('click', closeModalFunction);
+        notNowButton.addEventListener('click', closeModalFunction);
+        
+        // Close modal when clicking outside
+        premiumModal.addEventListener('click', function(e) {
+            if (e.target === premiumModal) {
+                closeModalFunction();
+            }
+        });
+        
+        // Handle plan selection
+        freeTrial.addEventListener('click', function() {
+            const videoId = premiumModal.getAttribute('data-video-id');
+            window.location.href = `pay.html?plan=free&video=${videoId}`;
+        });
+        
+        annualPlan.addEventListener('click', function() {
+            const videoId = premiumModal.getAttribute('data-video-id');
+            window.location.href = `pay.html?plan=annual&video=${videoId}`;
+        });
+        
+        // Add some visual feedback for plan selection
+        [freeTrial, annualPlan].forEach(plan => {
+            plan.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 10px 20px rgba(255, 71, 87, 0.2)';
+            });
+            
+            plan.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+        
+        // Add parallax effect to background elements on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const circles = document.querySelectorAll('.circle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            circles.forEach((circle, index) => {
+                const speed = (index + 1) * 10;
+                const xPos = (x - 0.5) * speed;
+                const yPos = (y - 0.5) * speed;
+                
+                circle.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
